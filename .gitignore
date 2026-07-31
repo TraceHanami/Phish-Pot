@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+.venv/
+env/
+.env
+
+# IDE & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project dynamic generated assets & plots
+static/shap_plot_*.png
+static/shap_plot.png
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS Specific
+.DS_Store
+Thumbs.db

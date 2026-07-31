@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis Result - Phishing Detection{% endblock %}
+
+{% block content %}
+<!-- Main Result Card -->
+<div class="card" style="text-align: center;">
+    {% if prediction == 1 %}
+    <div style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem;">🚨</h1>
+        <h2 style="margin-bottom: 1rem;">PHISHING DETECTED</h2>
+        <p style="font-size: 1.2rem; opacity: 0.9;">This website appears to be suspicious and potentially dangerous.</p>
+    </div>
+    {% else %}
+    <div style="background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem;">✅</h1>
+        <h2 style="margin-bottom: 1rem;">LIKELY LEGITIMATE</h2>
+        <p style="font-size: 1.2rem; opacity: 0.9;">This website appears to be safe based on the analyzed characteristics.</p>
+    </div>
+    {% endif %}
+    
+    <!-- Confidence Scores -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+        <div style="padding: 1rem; border-radius: 10px; background: {% if phishing_prob > legitimate_prob %}#ffebee{% else %}#f3e5f5{% endif %};">
+            <h3 style="color: #e74c3c; margin-bottom: 0.5rem;">Phishing Risk</h3>
+            <div style="background: #ecf0f1; border-radius: 10px; padding: 0.5rem;">
+                <div style="background: #e74c3c; height: 20px; border-radius: 10px; width: {{ phishing_prob }}%; transition: width 1s ease;"></div>
+            </div>
+            <p style="font-weight: bold; font-size: 1.2rem; margin-top: 0.5rem; color: #e74c3c;">{{ "%.1f"|format(phishing_prob) }}%</p>
+        </div>
+        
+        <div style="padding: 1rem; border-radius: 10px; background: {% if legitimate_prob > phishing_prob %}#e8f5e8{% else %}#f3e5f5{% endif %};">
+            <h3 style="color: #27ae60; margin-bottom: 0.5rem;">Legitimate Score</h3>
+            <div style="background: #ecf0f1; border-radius: 10px; padding: 0.5rem;">
+                <div style="background: #27ae60; height: 20px; border-radius: 10px; width: {{ legitimate_prob }}%; transition: width 1s ease;"></div>
+            </div>
+            <p style="font-weight: bold; font-size: 1.2rem; margin-top: 0.5rem; color: #27ae60;">{{ "%.1f"|format(legitimate_prob) }}%</p>
+        </div>
+    </div>
+    
+    <div style="text-align: center;">
+        <a href="{{ url_for('home') }}" style="
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-right: 1rem;
+        " onmouseover="this.style.background='#2980b9'" onmouseout="this.style.background='#3498db'">
+            <i class="fas fa-arrow-left"></i> Analyze Another Website
+        </a>
+        
+        <button onclick="window.print()" style="
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        " onmouseover="this.style.background='#7f8c8d'" onmouseout="this.style.background='#95a5a6'">
+            <i class="fas fa-print"></i> Print Report
+        </button>
+    </div>
+</div>
+
+<!-- Risk Factors Analysis -->
+{% if risk_factors %}
+<div class="card">
+    <h3 style="color: #e74c3c; margin-bottom: 1rem;">
+        <i class="fas fa-exclamation-triangle"></i> Identified Risk Factors
+    </h3>
+    <p style="color: #7f8c8d; margin-bottom: 1rem;">The following characteristics contributed to the security assessment:</p>
+    
+    <div style="display: grid; gap: 1rem;">
+        {% for factor in risk_factors %}
+        <div style="background: #ffebee; border-left: 4px solid #e74c3c; padding: 1rem; border-radius: 0 8px 8px 0;">
+            <p><i class="fas fa-warning" style="color: #e74c3c; margin-right: 0.5rem;"></i>{{ factor }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if prediction == 1 %}
+    <div style="background: #fff3e0; border: 2px solid #ff9800; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+        <h4 style="color: #f57c00; margin-bottom: 0.5rem;"><i class="fas fa-shield-alt"></i> Safety Recommendations</h4>
+        <ul style="color: #ef6c00; margin-left: 1rem;">
+            <li>Do not enter personal information on this website</li>
+            <li>Do not download any files or software</li>
+            <li>Avoid clicking on suspicious links</li>
+            <li>Consider reporting this website to security authorities</li>
+            <li>Verify the website's authenticity through official channels</li>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Analysis Details -->
+<div class="card">
+    <h3 style="color: #2c3e50; margin-bottom: 1rem;">
+        <i class="fas fa-chart-bar"></i> Detailed Analysis
+    </h3>
+    
+    <div style="display: grid; gap: 1rem;">
+        {% for feature, value in input_data.items() %}
+        <div style="display: flex; align-items: center; padding: 0.75rem; border: 1px solid #ecf0f1; border-radius: 8px;">
+            <div style="flex: 1;">
+                <strong>{{ descriptions[feature]['question'] }}</strong>
+            </div>
+            <div style="text-align: right;">
+                <span style="padding: 0.25rem 0.75rem; border-radius: 15px; font-weight: bold; font-size: 0.9rem;
+                           {% if value == -1 %}background: #ffebee; color: #c62828;
+                           {% elif value == 0 %}background: #fff3e0; color: #ef6c00;
+                           {% else %}background: #e8f5e8; color: #2e7d32;{% endif %}">
+                    {{ descriptions[feature]['options'][value] }}
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Analysis Metadata -->
+<div class="card">
+    <h3 style="color: #7f8c8d; margin-bottom: 1rem;">
+        <i class="fas fa-info-circle"></i> Analysis Information
+    </h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div>
+            <strong>Analysis Date:</strong><br>
+            <span style="color: #7f8c8d;">{{ timestamp }}</span>
+        </div>
+        <div>
+            <strong>Model Used:</strong><br>
+            <span style="color: #7f8c8d;">Random Forest Classifier</span>
+        </div>
+        <div>
+            <strong>Confidence Level:</strong><br>
+            <span style="color: #7f8c8d;">{{ "%.1f"|format(confidence) }}%</span>
+        </div>
+        <div>
+            <strong>Features Analyzed:</strong><br>
+            <span style="color: #7f8c8d;">{{ input_data|length }} Security Characteristics</span>
+        </div>
+    </div>
+    
+    <div style="margin-top: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+        <p style="font-size: 0.9rem; color: #6c757d; line-height: 1.6;">
+            <i class="fas fa-info-circle"></i> 
+            <strong>Disclaimer:</strong> This analysis is based on machine learning algorithms and should be used as a guide only. 
+            Always exercise caution when browsing unfamiliar websites and verify legitimacy through official channels when in doubt.
+        </p>
+    </div>
+</div>
+
+<style>
+/* Animation for progress bars */
+@keyframes fillProgress {
+    from { width: 0%; }
+}
+
+div[style*="transition: width 1s ease"] {
+    animation: fillProgress 1.5s ease-out;
+}
+
+/* Print styles */
+@media print {
+    body {
+        background: white !important;
+    }
+    
+    .nav, .footer {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        page-break-inside: avoid;
+        margin-bottom: 1rem !important;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+    
+    a, button {
+        display: block !important;
+        margin: 0.5rem 0 !important;
+        text-align: center !important;
+    }
+}
+</style>
+
+<script>
+// Add some interactive effects
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate the progress bars
+    const progressBars = document.querySelectorAll('div[style*="transition: width 1s ease"]');
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.width = width;
+        }, 500);
+    });
+    
+    // Add click-to-expand functionality for risk factors
+    const riskFactors = document.querySelectorAll('div[style*="border-left: 4px solid #e74c3c"]');
+    riskFactors.forEach(factor => {
+        factor.style.cursor = 'pointer';
+        factor.addEventListener('click', function() {
+            this.style.transform = this.style.transform === 'scale(1.02)' ? 'scale(1)' : 'scale(1.02)';
+            this.style.transition = 'transform 0.2s ease';
+        });
+    });
+});
+</script>
+{% endblock %}

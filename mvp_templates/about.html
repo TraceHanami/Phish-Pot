@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}About - Phishing Detection MVP{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="text-align: center; color: #2c3e50; margin-bottom: 2rem;">
+        <i class="fas fa-info-circle"></i> About This MVP
+    </h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+        <div style="text-align: center;">
+            <div style="background: #3498db; color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 2rem;">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h3>AI-Powered</h3>
+            <p style="color: #7f8c8d;">Uses machine learning to analyze website characteristics and detect potential phishing threats.</p>
+        </div>
+        
+        <div style="text-align: center;">
+            <div style="background: #e74c3c; color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 2rem;">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Security Focused</h3>
+            <p style="color: #7f8c8d;">Analyzes 10 key security features to determine if a website might be malicious.</p>
+        </div>
+        
+        <div style="text-align: center;">
+            <div style="background: #27ae60; color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 2rem;">
+                <i class="fas fa-user-friendly"></i>
+            </div>
+            <h3>User Friendly</h3>
+            <p style="color: #7f8c8d;">Simple interface that anyone can use to check website safety without technical knowledge.</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="color: #2c3e50; margin-bottom: 1rem;">
+        <i class="fas fa-cogs"></i> How It Works
+    </h3>
+    
+    <div style="margin-bottom: 2rem;">
+        <h4 style="color: #3498db; margin-bottom: 0.5rem;">1. Feature Analysis</h4>
+        <p>The system analyzes 10 critical website characteristics:</p>
+        <ul style="margin-left: 2rem; color: #7f8c8d;">
+            <li><strong>URL Structure:</strong> IP addresses, length, and suspicious patterns</li>
+            <li><strong>SSL Security:</strong> Certificate validity and encryption status</li>
+            <li><strong>Domain Information:</strong> Age, registration details, and history</li>
+            <li><strong>Content Analysis:</strong> Links, anchors, and page structure</li>
+            <li><strong>Reputation Data:</strong> Google indexing and security reports</li>
+        </ul>
+    </div>
+    
+    <div style="margin-bottom: 2rem;">
+        <h4 style="color: #e74c3c; margin-bottom: 0.5rem;">2. Machine Learning Classification</h4>
+        <p>A Random Forest classifier trained on over 11,000 website samples makes the final determination:</p>
+        <ul style="margin-left: 2rem; color: #7f8c8d;">
+            <li>High accuracy rate of 96.7%</li>
+            <li>Balanced precision and recall</li>
+            <li>Robust against false positives</li>
+        </ul>
+    </div>
+    
+    <div>
+        <h4 style="color: #27ae60; margin-bottom: 0.5rem;">3. Risk Assessment</h4>
+        <p>The system provides:</p>
+        <ul style="margin-left: 2rem; color: #7f8c8d;">
+            <li>Clear safety verdict (Legitimate or Phishing)</li>
+            <li>Confidence scores and risk percentages</li>
+            <li>Detailed explanation of risk factors</li>
+            <li>Safety recommendations when needed</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="color: #2c3e50; margin-bottom: 1rem;">
+        <i class="fas fa-chart-line"></i> Model Performance
+    </h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+        <div style="background: #ecf0f1; padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold; color: #2c3e50;">96.7%</div>
+            <div style="color: #7f8c8d;">Overall Accuracy</div>
+        </div>
+        
+        <div style="background: #e8f8f5; padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold; color: #27ae60;">96.1%</div>
+            <div style="color: #7f8c8d;">Phishing Detection Rate</div>
+        </div>
+        
+        <div style="background: #fef9e7; padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold; color: #f39c12;">97.5%</div>
+            <div style="color: #7f8c8d;">Legitimate Recognition</div>
+        </div>
+        
+        <div style="background: #e8f4fd; padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold; color: #3498db;">11,056</div>
+            <div style="color: #7f8c8d;">Training Samples</div>
+        </div>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+        <p style="font-size: 0.9rem; color: #6c757d;">
+            <i class="fas fa-info-circle"></i> 
+            The model was trained and validated using a comprehensive dataset of both legitimate and phishing websites, 
+            ensuring robust performance across various threat types and legitimate site categories.
+        </p>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="color: #2c3e50; margin-bottom: 1rem;">
+        <i class="fas fa-exclamation-triangle"></i> Important Disclaimers
+    </h3>
+    
+    <div style="background: #fff3cd; border: 2px solid #ffeaa7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h4 style="color: #856404; margin-bottom: 0.5rem;">⚠️ Use as a Guide Only</h4>
+        <p style="color: #856404; margin: 0;">
+            This tool provides assessments based on machine learning analysis. While highly accurate, 
+            it should not be your only source of security information. Always exercise caution online.
+        </p>
+    </div>
+    
+    <div style="background: #f8d7da; border: 2px solid #f5c6cb; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h4 style="color: #721c24; margin-bottom: 0.5rem;">🚫 Not a Security Guarantee</h4>
+        <p style="color: #721c24; margin: 0;">
+            No automated system is 100% accurate. New phishing techniques emerge constantly, 
+            and legitimate sites may occasionally be flagged. Use your judgment and verify through official channels.
+        </p>
+    </div>
+    
+    <div style="background: #d4edda; border: 2px solid #c3e6cb; padding: 1rem; border-radius: 8px;">
+        <h4 style="color: #155724; margin-bottom: 0.5rem;">✅ Best Practices</h4>
+        <ul style="color: #155724; margin-left: 1rem;">
+            <li>Always verify website URLs before entering sensitive information</li>
+            <li>Look for secure connection indicators (HTTPS, padlock icon)</li>
+            <li>Be suspicious of urgent requests for personal information</li>
+            <li>When in doubt, contact the organization directly through official channels</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="color: #2c3e50; margin-bottom: 1rem;">
+        <i class="fas fa-code"></i> Technical Details
+    </h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        <div>
+            <h4 style="color: #3498db;">Technology Stack</h4>
+            <ul style="color: #7f8c8d; font-family: monospace; font-size: 0.9rem;">
+                <li>Python 3.8+</li>
+                <li>Flask Web Framework</li>
+                <li>Scikit-learn ML Library</li>
+                <li>Random Forest Algorithm</li>
+                <li>Responsive HTML/CSS/JS</li>
+            </ul>
+        </div>
+        
+        <div>
+            <h4 style="color: #e74c3c;">Features Analyzed</h4>
+            <ul style="color: #7f8c8d; font-size: 0.9rem;">
+                <li>URL IP Address Usage</li>
+                <li>URL Length Classification</li>
+                <li>SSL Certificate State</li>
+                <li>Domain Registration Period</li>
+                <li>Domain Age Assessment</li>
+            </ul>
+        </div>
+        
+        <div>
+            <h4 style="color: #27ae60;">Model Details</h4>
+            <ul style="color: #7f8c8d; font-size: 0.9rem;">
+                <li>Random Forest (50 trees)</li>
+                <li>Max depth: 10 levels</li>
+                <li>10-feature subset</li>
+                <li>30% test split validation</li>
+                <li>Stratified sampling</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="text-align: center;">
+    <h3 style="color: #2c3e50; margin-bottom: 1rem;">
+        <i class="fas fa-rocket"></i> Ready to Start?
+    </h3>
+    <p style="color: #7f8c8d; margin-bottom: 2rem; font-size: 1.1rem;">
+        Test the security of any website using our AI-powered analysis tool.
+    </p>
+    
+    <a href="{{ url_for('home') }}" style="
+        display: inline-block;
+        background: linear-gradient(135deg, #3498db, #2c3e50);
+        color: white;
+        padding: 15px 35px;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)'"
+       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)'">
+        <i class="fas fa-search"></i> Start Security Analysis
+    </a>
+</div>
+
+<style>
+/* Additional animations and effects */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.2s; }
+.card:nth-child(4) { animation-delay: 0.3s; }
+.card:nth-child(5) { animation-delay: 0.4s; }
+.card:nth-child(6) { animation-delay: 0.5s; }
+
+/* Icon hover effects */
+.fas {
+    transition: transform 0.3s ease;
+}
+
+.card:hover .fas {
+    transform: scale(1.1);
+}
+</style>
+{% endblock %}
