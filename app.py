@@ -90,55 +90,19 @@ def predict_form():
     plot_url = None
     explanation = ""
 
-    if X_bg is not None:
-        try:
-            import shap
-            import matplotlib
-            matplotlib.use('Agg')
-            import matplotlib.pyplot as plt
-            if model_key in ["xgb", "best", "rf"]:
-                explainer = shap.Explainer(model, X_bg, algorithm="tree")
-            else:
-                explainer = shap.Explainer(model, X_bg, algorithm="linear")
-
-            shap_values = explainer(input_df)
-
-            if hasattr(shap_values, "values"):
-                val = shap_values.values
-                if val.ndim == 3:
-                    shap_val_row = val[0, :, 1]
-                else:
-                    shap_val_row = val[0]
-            else:
-                shap_val_row = shap_values[0].values[0]
-
-            sorted_idx = np.argsort(np.abs(shap_val_row))[::-1]
-            top_indices = sorted_idx[:10]
-            top_features = [str(features[i]) for i in top_indices]
-            top_values = shap_val_row[top_indices]
-
-            buf = io.BytesIO()
-            plt.figure(figsize=(8, 6))
-            plt.barh(top_features[::-1], top_values[::-1])
-            plt.xlabel("SHAP value")
-            plt.title("Top 10 SHAP Feature Influences")
-            plt.tight_layout()
-            plt.savefig(buf, format="png")
-            plt.close()
-            buf.seek(0)
-
-            plot_url = f"data:image/png;base64,{base64.b64encode(buf.getvalue()).decode('utf-8')}"
-
-            nle_features = [features[i] for i in sorted_idx[:3]]
-            reasons = [feature_expl_dict.get(f, f.replace('_', ' ')) for f in nle_features]
-            explanation = (
-                f"The model classified this input as {label} primarily because "
-                f"{', '.join(reasons[:-1])}, and {reasons[-1]}."
-            )
-        except Exception as e:
-            print(f"SHAP explanation disabled: {e}")
-            plot_url = None
-            explanation = f"The model classified this input as {label}."
+    if hasattr(model, 'feature_importances_'):
+        importances = model.feature_importances_
+        input_vector = [input_data.get(f, 0) for f in features]
+        scores = importances * np.abs(input_vector)
+        sorted_idx = np.argsort(scores)[::-1]
+        top_feats = [features[i] for i in sorted_idx[:3]]
+        reasons = [feature_expl_dict.get(f, f.replace('_', ' ')) for f in top_feats]
+        explanation = (
+            f"The model classified this input as {label} primarily based on key indicators: "
+            f"{', '.join(reasons[:-1])}, and {reasons[-1]}."
+        )
+    else:
+        explanation = f"The model classified this input as {label} based on the submitted security features."
 
     return render_template(
         'result.html',

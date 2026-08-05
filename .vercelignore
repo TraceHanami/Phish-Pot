@@ -12,5 +12,10 @@ demo_app.py
 streamlit_app.py
 streamlit_app_model_debug.py
 start_demo.bat
+mvp_requirements.txt
+requirements-eda.txt
+*.md
 *.pyc
 __pycache__
+.venv
+venv
