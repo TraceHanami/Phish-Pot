@@ -35,7 +35,7 @@ class TestPhishingDetector(unittest.TestCase):
         """Test Flask home endpoint response"""
         response = self.flask_client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Flask API is running", response.data)
+        self.assertIn(b"Phishing Detection", response.data)
 
     def test_flask_form_route(self):
         """Test Flask input form rendering"""

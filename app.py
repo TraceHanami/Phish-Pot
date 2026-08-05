@@ -3,11 +3,12 @@ from flask import Flask, request, render_template
 import markupsafe
 import joblib
 import pandas as pd
-import shap
-import matplotlib.pyplot as plt
 import numpy as np
 import os
+os.environ['MPLBACKEND'] = 'Agg'
 import uuid
+import io
+import base64
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
@@ -61,7 +62,7 @@ feature_expl_dict = {
 
 @app.route('/')
 def home():
-    return "✅ Flask API is running. Use /form to access the GUI."
+    return render_template('form.html', features=features)
 
 @app.route('/form')
 def form():
@@ -90,48 +91,54 @@ def predict_form():
     explanation = ""
 
     if X_bg is not None:
-        if model_key in ["xgb", "best", "rf"]:
-            explainer = shap.Explainer(model, X_bg, algorithm="tree")
-        else:
-            explainer = shap.Explainer(model, X_bg, algorithm="linear")
-
-        shap_values = explainer(input_df)
-
-        if hasattr(shap_values, "values"):
-            val = shap_values.values
-            if val.ndim == 3:
-                shap_val_row = val[0, :, 1]
+        try:
+            import shap
+            import matplotlib
+            matplotlib.use('Agg')
+            import matplotlib.pyplot as plt
+            if model_key in ["xgb", "best", "rf"]:
+                explainer = shap.Explainer(model, X_bg, algorithm="tree")
             else:
-                shap_val_row = val[0]
-        else:
-            shap_val_row = shap_values[0].values[0]
+                explainer = shap.Explainer(model, X_bg, algorithm="linear")
 
-        sorted_idx = np.argsort(np.abs(shap_val_row))[::-1]
-        top_indices = sorted_idx[:10]
-        top_features = [str(features[i]) for i in top_indices]
-        top_values = shap_val_row[top_indices]
+            shap_values = explainer(input_df)
 
-        # Use unique filename per plot to prevent race conditions & image collisions
-        os.makedirs("static", exist_ok=True)
-        unique_filename = f"shap_plot_{uuid.uuid4().hex[:10]}.png"
-        plot_path = os.path.join("static", unique_filename)
+            if hasattr(shap_values, "values"):
+                val = shap_values.values
+                if val.ndim == 3:
+                    shap_val_row = val[0, :, 1]
+                else:
+                    shap_val_row = val[0]
+            else:
+                shap_val_row = shap_values[0].values[0]
 
-        plt.figure(figsize=(8, 6))
-        plt.barh(top_features[::-1], top_values[::-1])
-        plt.xlabel("SHAP value")
-        plt.title("Top 10 SHAP Feature Influences")
-        plt.tight_layout()
-        plt.savefig(plot_path)
-        plt.close()
+            sorted_idx = np.argsort(np.abs(shap_val_row))[::-1]
+            top_indices = sorted_idx[:10]
+            top_features = [str(features[i]) for i in top_indices]
+            top_values = shap_val_row[top_indices]
 
-        plot_url = f"/static/{unique_filename}"
+            buf = io.BytesIO()
+            plt.figure(figsize=(8, 6))
+            plt.barh(top_features[::-1], top_values[::-1])
+            plt.xlabel("SHAP value")
+            plt.title("Top 10 SHAP Feature Influences")
+            plt.tight_layout()
+            plt.savefig(buf, format="png")
+            plt.close()
+            buf.seek(0)
 
-        nle_features = [features[i] for i in sorted_idx[:3]]
-        reasons = [feature_expl_dict.get(f, f.replace('_', ' ')) for f in nle_features]
-        explanation = (
-            f"The model classified this input as {label} primarily because "
-            f"{', '.join(reasons[:-1])}, and {reasons[-1]}."
-        )
+            plot_url = f"data:image/png;base64,{base64.b64encode(buf.getvalue()).decode('utf-8')}"
+
+            nle_features = [features[i] for i in sorted_idx[:3]]
+            reasons = [feature_expl_dict.get(f, f.replace('_', ' ')) for f in nle_features]
+            explanation = (
+                f"The model classified this input as {label} primarily because "
+                f"{', '.join(reasons[:-1])}, and {reasons[-1]}."
+            )
+        except Exception as e:
+            print(f"SHAP explanation disabled: {e}")
+            plot_url = None
+            explanation = f"The model classified this input as {label}."
 
     return render_template(
         'result.html',

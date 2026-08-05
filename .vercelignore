@@ -1,0 +1,16 @@
+.git
+.github
+.devcontainer
+notebooks
+EDA codes
+tests
+mvp_templates
+mvp_static
+mvp_models
+mvp_app.py
+demo_app.py
+streamlit_app.py
+streamlit_app_model_debug.py
+start_demo.bat
+*.pyc
+__pycache__
