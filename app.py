@@ -10,15 +10,21 @@ import uuid
 import io
 import base64
 
-app = Flask(__name__, template_folder='templates', static_folder='static')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, 'templates'),
+    static_folder=os.path.join(BASE_DIR, 'static')
+)
 
 models = {
-    "lr": joblib.load("models/phishing_model_lr.pkl"),
-    "best": joblib.load("models/phishing_model_best.pkl"),
-    "rf": joblib.load("models/phishing_model_rf.pkl")
+    "lr": joblib.load(os.path.join(BASE_DIR, "models", "phishing_model_lr.pkl")),
+    "best": joblib.load(os.path.join(BASE_DIR, "models", "phishing_model_best.pkl")),
+    "rf": joblib.load(os.path.join(BASE_DIR, "models", "phishing_model_rf.pkl"))
 }
 try:
-    models["xgb"] = joblib.load("models/phishing_model_xgb.pkl")
+    models["xgb"] = joblib.load(os.path.join(BASE_DIR, "models", "phishing_model_xgb.pkl"))
 except Exception:
     models["xgb"] = models["best"]
 
@@ -26,7 +32,7 @@ features = list(models["best"].feature_names_in_)
 
 # Cache background dataset once for SHAP explainers to optimize performance
 try:
-    bg_data = pd.read_csv("data/phishing.csv")
+    bg_data = pd.read_csv(os.path.join(BASE_DIR, "data", "phishing.csv"))
     X_bg = bg_data[features]
 except Exception as e:
     X_bg = None
