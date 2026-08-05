@@ -65,14 +65,15 @@ feature_expl_dict = {
 }
 
 @app.route('/')
-def home():
-    return render_template('form.html', features=features)
-
 @app.route('/form')
+@app.route('/api')
+@app.route('/api/index')
+@app.route('/api/index.py')
 def form():
     return render_template('form.html', features=features)
 
 @app.route('/predict_form', methods=['POST'])
+@app.route('/api/predict_form', methods=['POST'])
 def predict_form():
     model_key = request.form.get("model_choice", "best")
     model = models.get(model_key, models["best"])
