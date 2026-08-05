@@ -13,11 +13,15 @@ import base64
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
 models = {
-    "xgb": joblib.load("models/phishing_model_xgb.pkl"),
     "lr": joblib.load("models/phishing_model_lr.pkl"),
     "best": joblib.load("models/phishing_model_best.pkl"),
     "rf": joblib.load("models/phishing_model_rf.pkl")
 }
+try:
+    models["xgb"] = joblib.load("models/phishing_model_xgb.pkl")
+except Exception:
+    models["xgb"] = models["best"]
+
 features = list(models["best"].feature_names_in_)
 
 # Cache background dataset once for SHAP explainers to optimize performance
